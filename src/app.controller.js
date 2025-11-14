@@ -7,12 +7,13 @@ const bootstrap = async (app, express) => {
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
 
-
   app.get((req, res, next) => {
-    return res.status(404).json({
-      success: false,
-      message: "Invalid Url",
-    });
+    return next(new Error("Invalid URL", { cause: 404 }));
+  });
+  app.use((error, req, res, next) => {
+    return res
+      .status(error.status || 500)
+      .json({ success: false, message: error.message, stack: error.stack });
   });
 };
 
