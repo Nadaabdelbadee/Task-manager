@@ -6,6 +6,8 @@ const userSchema = new Schema(
     name: {
       type: String,
       required: true,
+      minLength:3,
+      maxLength:20,
       unique: [true, "user name already exist"],
     },
     email: {

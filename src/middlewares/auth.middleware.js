@@ -1,5 +1,6 @@
 import { User } from "../DB/models/user.model.js";
 import jwt from "jsonwebtoken";
+import { message } from "../utils/messages/index.js";
 
 export const isAuthenticate = async (req, res, next) => {
   // get data from req
@@ -20,7 +21,9 @@ export const isAuthenticate = async (req, res, next) => {
   const userExist = await User.findById(id);
   // if user not exist
   if (!userExist) {
-    return res.status(404).json({ succeess: false, message: "User not found" });
+    return res
+      .status(404)
+      .json({ succeess: false, message: message.user.notFound });
   }
   //pass data from user to req
   req.user = userExist;
