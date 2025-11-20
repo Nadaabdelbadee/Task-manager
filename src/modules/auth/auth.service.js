@@ -53,6 +53,9 @@ export const login = asyncHandler(async (req, res, next) => {
   if (userExist.isConfirmed == false) {
     return next(new Error(message.email.verify, { cause: 400 }));
   }
+  if (userExist.Deleted == true) {
+    await User.updateOne({ _id: userExist._id }, { Deleted: false });
+  }
   // check password
   const passMatch = compare({ data: password, hashData: userExist.password });
   if (!passMatch) {

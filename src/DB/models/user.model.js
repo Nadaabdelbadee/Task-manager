@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import { Gender } from "../../enums.js";
 
+
 const userSchema = new Schema(
   {
     name: {
@@ -20,6 +21,7 @@ const userSchema = new Schema(
     Deleted: { type: Boolean, default: false },
     gender: { type: String, enum: Object.values(Gender) },
     isConfirmed: { type: Boolean, default: false },
+    datatedAt:Date
   },
   {
     timestamps: true,

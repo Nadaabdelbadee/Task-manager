@@ -16,7 +16,7 @@ export const isAuthenticate = async (req, res, next) => {
       .json({ succeess: false, message: "Invalid Bearer Key" });
   }
   const token = authorization.split(" ")[1];
-  const { email, id } = jwt.verify(token, process.env.SECRET_JWT);
+  const { email, id, iat } = jwt.verify(token, process.env.SECRET_JWT);
   // check user existence
   const userExist = await User.findById(id);
   // if user not exist
@@ -26,6 +26,14 @@ export const isAuthenticate = async (req, res, next) => {
       .json({ succeess: false, message: message.user.notFound });
   }
   //pass data from user to req
+  if (userExist.Deleted == true) {
+    return next(
+      new Error("your account is freezed! please,Login First", { cause: 400 })
+    );
+  }
+  if (userExist.datatedAt.getTime() > iat * 1000) {
+    return next(new Error("destroyed token", { cause: 400 }));
+  }
   req.user = userExist;
   // if user exist
   return next();
