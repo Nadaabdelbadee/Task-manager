@@ -38,7 +38,7 @@ export const register = asyncHandler(async (req, res, next) => {
   //return response
   return res
     .status(201)
-    .json({ success: true, message: message.user.createdUser, user });
+    .json({ success: true, message: message.user.created, user });
 });
 
 // login service

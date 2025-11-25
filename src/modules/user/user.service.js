@@ -13,5 +13,5 @@ export const freezeAccount = asyncHandler(async (req, res, next) => {
   await User.updateOne({ _id: req.user._id }, { Deleted: true  , datatedAt:Date.now()});
   return res
     .status(200)
-    .json({ succeess: true, message: message.user.deletedUser });
+    .json({ succeess: true, message: message.user.deleted });
 });

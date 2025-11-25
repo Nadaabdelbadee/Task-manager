@@ -1,9 +1,9 @@
 const generateMessage = (entity) => ({
   notFound: `${entity} not found`,
-  alreadtExist: `${entity} already Exist`,
-  createdUser: `${entity} created successfully`,
-  updatedUser: `${entity} updated successfully`,
-  deletedUser: `${entity} deleted successfully`,
+  alreadyExist: `${entity} already Exist`,
+  created: `${entity} created successfully`,
+  updated: `${entity} updated successfully`,
+  deleted: `${entity} deleted successfully`,
 });
 
 export const message = {
