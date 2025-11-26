@@ -3,7 +3,22 @@ export const subTaskValidation = joi
   .object({
     subName: joi.string().required(),
     mainTaskId: joi.string().hex().length(24).required(),
-    startDate: joi.string().isoDate(),
-    endDate: joi.string().isoDate(),
+  })
+  .required();
+
+export const getTaskValidation = joi
+  .object({
+    id: joi.string().hex().length(24).required(),
+  })
+  .required();
+export const updateTaskValidation = joi
+  .object({
+    id: joi.string().hex().length(24).required(),
+    subName: joi.string().required(),
+  })
+  .required();
+export const deleteTaskValidation = joi
+  .object({
+    id: joi.string().hex().length(24).required(),
   })
   .required();
