@@ -1,14 +1,15 @@
 import { Router } from "express";
 import {
   deleteSubTasks,
+  doneSubTasks,
   getSubTasks,
   setSubTask,
   updateSubTasks,
 } from "./subTask.service.js";
 import { isAuthenticate } from "../../middlewares/auth.middleware.js";
 import {
-  deleteTaskValidation,
   getTaskValidation,
+  IDTaskValidation,
   subTaskValidation,
   updateTaskValidation,
 } from "./subTask.validation.js";
@@ -29,9 +30,15 @@ router.patch(
   isAuthenticate,
   updateSubTasks
 );
+router.patch(
+  "/done/:id",
+  isValid(IDTaskValidation),
+  isAuthenticate,
+  doneSubTasks
+);
 router.delete(
   "/delete/:id",
-  isValid(deleteTaskValidation),
+  isValid(IDTaskValidation),
   isAuthenticate,
   deleteSubTasks
 );

@@ -1,11 +1,12 @@
 import { Router } from "express";
 import {
-  dalateMainTaskValidation,
+  IDMainTaskValidation,
   mainTaskValidation,
   updateMainTaskValidation,
 } from "./mainTask.validation.js";
 import {
   deleteMainTask,
+  donemainTasks,
   getMainTasks,
   setMainTask,
   updateMainTask,
@@ -23,9 +24,15 @@ router.patch(
   isAuthenticate,
   updateMainTask
 );
+router.patch(
+  "/done/:id",
+  isValid(IDMainTaskValidation),
+  isAuthenticate,
+  donemainTasks
+);
 router.delete(
   "/delete/:id",
-  isValid(dalateMainTaskValidation),
+  isValid(IDMainTaskValidation),
   isAuthenticate,
   deleteMainTask
 );

@@ -7,7 +7,7 @@ export const mainTaskValidation = joi
     endDate: joi.string().isoDate(),
   })
   .required();
-export const dalateMainTaskValidation = joi
+export const IDMainTaskValidation = joi
   .object({
     id: joi.string().hex().length(24).required(),
   })

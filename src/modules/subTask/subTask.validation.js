@@ -17,7 +17,7 @@ export const updateTaskValidation = joi
     subName: joi.string().required(),
   })
   .required();
-export const deleteTaskValidation = joi
+export const IDTaskValidation = joi
   .object({
     id: joi.string().hex().length(24).required(),
   })

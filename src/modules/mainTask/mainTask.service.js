@@ -34,6 +34,14 @@ export const updateMainTask = asyncHandler(async (req, res, next) => {
     .status(200)
     .json({ success: true, message: message.mainTask.updated });
 });
+
+// done main task ==============================================
+export const donemainTasks = asyncHandler(async (req, res, next) => {
+  const mainTaskExist = await MainTask.findById(req.params.id);
+  if (!mainTaskExist) return next(new Error(message.mainTask.notFound));
+  await MainTask.updateOne({ done: true });
+  return res.status(200).json({ success: true, message: "MainTask completed" });
+});
 // delete main task ================================================
 export const deleteMainTask = asyncHandler(async (req, res, next) => {
   const mainTaskExist = await MainTask.findById(req.params.id);

@@ -34,6 +34,13 @@ export const updateSubTasks = asyncHandler(async (req, res, next) => {
     .status(200)
     .json({ success: true, message: message.subTask.updated });
 });
+// done sub task ==============================================
+export const doneSubTasks = asyncHandler(async (req, res, next) => {
+  const subTaskExist = await SubTask.findById(req.params.id);
+  if (!subTaskExist) return next(new Error(message.subTask.notFound));
+  await SubTask.updateOne({ done: true });
+  return res.status(200).json({ success: true, message: "subTask completed" });
+});
 // delete sub task ==============================================
 export const deleteSubTasks = asyncHandler(async (req, res, next) => {
   const subTaskExist = await SubTask.findById(req.params.id);
