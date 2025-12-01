@@ -4,7 +4,7 @@ const maintaskSchema = new Schema(
   {
     TaskName: { type: String, required: true, unique: true },
     userId: { type: Types.ObjectId, required: true, ref: "User" },
-    startDate: Date,
+    startDate: { type: Date, default: Date.now },
     endDate: Date,
     deleted: Boolean,
     donePercentage: Number,

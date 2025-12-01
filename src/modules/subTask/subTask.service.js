@@ -43,6 +43,41 @@ export const doneSubTasks = asyncHandler(async (req, res, next) => {
   await SubTask.updateOne({ done: true });
   return res.status(200).json({ success: true, message: "subTask completed" });
 });
+// start date sub task ==============================================
+export const startDate = asyncHandler(async (req, res, next) => {
+  const subTaskExist = await SubTask.findById(req.params.id);
+  if (!subTaskExist)
+    return next(new Error(message.subTask.notFound, { cause: 404 }));
+  if (
+    new Date(req.body.startDate) >= new Date(subTaskExist.mainTaskId.startDate)
+  ) {
+    return next(
+      new Error("start date must be after start date of main task ", {
+        cause: 400,
+      })
+    );
+  }
+  const sDate = await SubTask.updateOne({ startDate: req.body });
+  return res.status(200).json({ success: true, message: sDate });
+});
+// end date sub task ==============================================
+export const endDate = asyncHandler(async (req, res, next) => {
+  const subTaskExist = await SubTask.findById(req.params.id);
+  if (!subTaskExist)
+    return next(new Error(message.subTask.notFound, { cause: 404 }));
+  if (
+    new Date(req.body.endDate) <= new Date(subTaskExist.startDate) &&
+    new Date(subTaskExist.mainTaskId.endDate)
+  ) {
+    return next(new Error("End date must be after start date", { cause: 400 }));
+  }
+  const eDate = await MainTask.findByIdAndUpdate(
+    req.params.id,
+    { endDate: req.body.endDate },
+    { new: true }
+  );
+  return res.status(200).json({ success: true, message: eDate });
+});
 // delete sub task ==============================================
 export const deleteSubTasks = asyncHandler(async (req, res, next) => {
   const subTaskExist = await SubTask.findById(req.params.id);

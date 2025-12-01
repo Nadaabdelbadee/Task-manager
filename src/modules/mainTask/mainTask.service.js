@@ -8,7 +8,8 @@ import { message } from "../../utils/messages/index.js";
 export const createMainTask = asyncHandler(async (req, res, next) => {
   const { TaskName, userId } = req.body;
   const userIdExist = await User.findById(userId);
-  if (!userIdExist) return next(new Error(message.user.notFound));
+  if (!userIdExist)
+    return next(new Error(message.user.notFound, { cause: 404 }));
   await MainTask.create({ TaskName, userId });
   return res
     .status(201)
@@ -39,7 +40,8 @@ export const updateMainTask = asyncHandler(async (req, res, next) => {
 // percentage main task ==============================================
 export const percentageMainTasks = asyncHandler(async (req, res, next) => {
   const mainTaskExist = await MainTask.findById(req.params.id);
-  if (!mainTaskExist) return next(new Error(message.mainTask.notFound));
+  if (!mainTaskExist)
+    return next(new Error(message.mainTask.notFound, { cause: 404 }));
   const doneSubtasks = await SubTask.find({
     mainTaskId: mainTaskExist._id,
     done: true,
@@ -52,6 +54,29 @@ export const percentageMainTasks = asyncHandler(async (req, res, next) => {
   return res
     .status(200)
     .json({ success: true, message: mainTaskExist.donePercentage });
+});
+// start date main task ==============================================
+export const startDate = asyncHandler(async (req, res, next) => {
+  const mainTaskExist = await MainTask.findById(req.params.id);
+  if (!mainTaskExist)
+    return next(new Error(message.mainTask.notFound, { cause: 404 }));
+  const sDate = await MainTask.updateOne({ startDate: req.body });
+  return res.status(200).json({ success: true, message: sDate });
+});
+// end date main task ==============================================
+export const endDate = asyncHandler(async (req, res, next) => {
+  const mainTaskExist = await MainTask.findById(req.params.id);
+  if (!mainTaskExist)
+    return next(new Error(message.mainTask.notFound, { cause: 404 }));
+  if (new Date(req.body.endDate) <= new Date(mainTaskExist.startDate)) {
+    return next(new Error("End date must be after start date", { cause: 400 }));
+  }
+  const eDate = await MainTask.findByIdAndUpdate(
+    req.params.id,
+    { endDate: req.body.endDate },
+    { new: true }
+  );
+  return res.status(200).json({ success: true, message: eDate });
 });
 // delete main task ================================================
 export const deleteMainTask = asyncHandler(async (req, res, next) => {

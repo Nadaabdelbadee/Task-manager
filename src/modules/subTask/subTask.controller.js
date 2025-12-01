@@ -1,46 +1,47 @@
 import { Router } from "express";
-import {
-  createSubTask,
-  deleteSubTasks,
-  doneSubTasks,
-  getSubTasks,
-  updateSubTasks,
-} from "./subTask.service.js";
+import * as ST from "./subTask.service.js";
 import { isAuthenticate } from "../../middlewares/auth.middleware.js";
-import {
-  getTaskValidation,
-  IDTaskValidation,
-  subTaskValidation,
-  updateTaskValidation,
-} from "./subTask.validation.js";
+import * as VS from "./subTask.validation.js";
 import { isValid } from "../../middlewares/validation.middleware.js";
 
 const router = Router();
 
-router.post("/task", isValid(subTaskValidation), isAuthenticate, createSubTask);
+router.post("/task", isValid(VS.subTValid), isAuthenticate, ST.createSubTask);
 router.get(
   "/gettask/:id",
-  isValid(getTaskValidation),
+  isValid(VS.getSTValid),
   isAuthenticate,
-  getSubTasks
+  ST.getSubTasks
 );
 router.patch(
   "/update/:id",
-  isValid(updateTaskValidation),
+  isValid(VS.updateSTValid),
   isAuthenticate,
-  updateSubTasks
+  ST.updateSubTasks
 );
 router.patch(
   "/done/:id",
-  isValid(IDTaskValidation),
+  isValid(VS.IDSTValid),
   isAuthenticate,
-  doneSubTasks
+  ST.doneSubTasks
+);
+router.patch(
+  "/sDate/:id",
+  isValid(VS.sDateSTValid),
+  isAuthenticate,
+  ST.startDate
+);
+router.patch(
+  "/eDate/:id",
+  isValid(VS.eDateSTValid),
+  isAuthenticate,
+  ST.endDate
 );
 router.delete(
   "/delete/:id",
-  isValid(IDTaskValidation),
+  isValid(VS.IDSTValid),
   isAuthenticate,
-  deleteSubTasks
+  ST.deleteSubTasks
 );
 
 export default router;
