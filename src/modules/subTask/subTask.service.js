@@ -4,12 +4,14 @@ import { asyncHandler } from "../../utils/async-handler.js";
 import { message } from "../../utils/messages/index.js";
 
 // add new sub task ==============================================
-export const setSubTask = asyncHandler(async (req, res, next) => {
+export const createSubTask = asyncHandler(async (req, res, next) => {
   const { subName, mainTaskId } = req.body;
   const mainTaskExist = await MainTask.findById(mainTaskId);
   if (!mainTaskExist)
     return next(new Error(message.mainTask.notFound, { cause: 404 }));
-  await SubTask.create({ subName, mainTaskId });
+  const subTask = await SubTask.create({ subName, mainTaskId });
+  mainTaskExist.subTasks.push(subTask._id);
+  await mainTaskExist.save();
   return res
     .status(201)
     .json({ success: true, message: message.subTask.created });

@@ -5,10 +5,10 @@ import {
   updateMainTaskValidation,
 } from "./mainTask.validation.js";
 import {
+  createMainTask,
   deleteMainTask,
-  donemainTasks,
   getMainTasks,
-  setMainTask,
+  percentageMainTasks,
   updateMainTask,
 } from "./mainTask.service.js";
 import { isValid } from "../../middlewares/validation.middleware.js";
@@ -16,7 +16,7 @@ import { isAuthenticate } from "../../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.post("/task", isValid(mainTaskValidation), setMainTask);
+router.post("/task", isValid(mainTaskValidation), createMainTask);
 router.get("/gettask", isAuthenticate, getMainTasks);
 router.patch(
   "/update/:id",
@@ -25,10 +25,10 @@ router.patch(
   updateMainTask
 );
 router.patch(
-  "/done/:id",
+  "/percentage/:id",
   isValid(IDMainTaskValidation),
   isAuthenticate,
-  donemainTasks
+  percentageMainTasks
 );
 router.delete(
   "/delete/:id",

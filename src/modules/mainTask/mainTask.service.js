@@ -1,10 +1,11 @@
 import { MainTask } from "../../DB/models/mainTask.model.js";
+import { SubTask } from "../../DB/models/subTask.model.js";
 import { User } from "../../DB/models/user.model.js";
 import { asyncHandler } from "../../utils/async-handler.js";
 import { message } from "../../utils/messages/index.js";
 
 //  set main task ==================================================
-export const setMainTask = asyncHandler(async (req, res, next) => {
+export const createMainTask = asyncHandler(async (req, res, next) => {
   const { TaskName, userId } = req.body;
   const userIdExist = await User.findById(userId);
   if (!userIdExist) return next(new Error(message.user.notFound));
@@ -35,12 +36,22 @@ export const updateMainTask = asyncHandler(async (req, res, next) => {
     .json({ success: true, message: message.mainTask.updated });
 });
 
-// done main task ==============================================
-export const donemainTasks = asyncHandler(async (req, res, next) => {
+// percentage main task ==============================================
+export const percentageMainTasks = asyncHandler(async (req, res, next) => {
   const mainTaskExist = await MainTask.findById(req.params.id);
   if (!mainTaskExist) return next(new Error(message.mainTask.notFound));
-  await MainTask.updateOne({ done: true });
-  return res.status(200).json({ success: true, message: "MainTask completed" });
+  const doneSubtasks = await SubTask.find({
+    mainTaskId: mainTaskExist._id,
+    done: true,
+  });
+  const percentageNumber =
+    (doneSubtasks.length / mainTaskExist.subTasks.length) * 100;
+  const percentage = await MainTask.updateOne({
+    donePercentage: percentageNumber,
+  });
+  return res
+    .status(200)
+    .json({ success: true, message: mainTaskExist.donePercentage });
 });
 // delete main task ================================================
 export const deleteMainTask = asyncHandler(async (req, res, next) => {

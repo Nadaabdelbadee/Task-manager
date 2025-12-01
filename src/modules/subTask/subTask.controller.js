@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
+  createSubTask,
   deleteSubTasks,
   doneSubTasks,
   getSubTasks,
-  setSubTask,
   updateSubTasks,
 } from "./subTask.service.js";
 import { isAuthenticate } from "../../middlewares/auth.middleware.js";
@@ -17,7 +17,7 @@ import { isValid } from "../../middlewares/validation.middleware.js";
 
 const router = Router();
 
-router.post("/task", isValid(subTaskValidation), isAuthenticate, setSubTask);
+router.post("/task", isValid(subTaskValidation), isAuthenticate, createSubTask);
 router.get(
   "/gettask/:id",
   isValid(getTaskValidation),

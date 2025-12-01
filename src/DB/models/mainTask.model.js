@@ -7,8 +7,8 @@ const maintaskSchema = new Schema(
     startDate: Date,
     endDate: Date,
     deleted: Boolean,
-    done: { type: Boolean, default: false },
     donePercentage: Number,
+    subTasks: [{ type: Types.ObjectId, ref: "SubTask" }],
   },
   {
     timestamps: true,

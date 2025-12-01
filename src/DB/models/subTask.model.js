@@ -2,7 +2,7 @@ import { model, Schema, Types } from "mongoose";
 
 const subTaskSchema = new Schema(
   {
-    subName: { type: String, required: true, unique: true },
+    subName: { type: String, required: true },
     mainTaskId: { type: Types.ObjectId, required: true },
     startDate: Date,
     endDate: Date,
