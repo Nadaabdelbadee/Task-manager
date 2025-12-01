@@ -31,7 +31,7 @@ export const isAuthenticate = async (req, res, next) => {
       new Error("your account is freezed! please,Login First", { cause: 400 })
     );
   }
-  if (userExist.datatedAt.getTime() > iat * 1000) {
+  if (userExist.deletedAt && userExist.deletedAt.getTime() > iat * 1000) {
     return next(new Error("destroyed token", { cause: 400 }));
   }
   req.user = userExist;

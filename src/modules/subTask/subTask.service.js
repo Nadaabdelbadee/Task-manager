@@ -28,13 +28,29 @@ export const getSubTasks = asyncHandler(async (req, res, next) => {
 });
 // update sub task ==============================================
 export const updateSubTasks = asyncHandler(async (req, res, next) => {
-  const { subName } = req.body;
+  const { subName, mainTaskId  } = req.body; // mainTaskId لازم موجود
   const subTaskExist = await SubTask.findById(req.params.id);
-  if (!subTaskExist) return next(new Error(message.subTask.notFound));
-  await SubTask.updateOne({ subName });
-  return res
-    .status(200)
-    .json({ success: true, message: message.subTask.updated });
+  if (!subTaskExist)
+    return next(new Error(message.subTask.notFound, { cause: 404 }));
+
+  // تحقق من تكرار الاسم ضمن نفس MainTask
+  const duplicate = await SubTask.findOne({
+    subName,
+    mainTaskId, 
+    _id: { $ne: subTaskExist._id },
+  });
+
+  if (duplicate)
+    return next(new Error("SubTask name already exists for this Main Task", { cause: 400 }));
+
+  subTaskExist.subName = subName;
+  await subTaskExist.save();
+
+  return res.status(200).json({
+    success: true,
+    message: message.subTask.updated,
+    data: subTaskExist,
+  });
 });
 // done sub task ==============================================
 export const doneSubTasks = asyncHandler(async (req, res, next) => {

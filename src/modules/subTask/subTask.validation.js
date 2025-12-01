@@ -14,6 +14,7 @@ export const getSTValid = joi
 export const updateSTValid = joi
   .object({
     id: joi.string().hex().length(24).required(),
+    mainTaskId: joi.string().hex().length(24).required(),
     subName: joi.string().required(),
   })
   .required();

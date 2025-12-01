@@ -31,7 +31,7 @@ export const updateMainTask = asyncHandler(async (req, res, next) => {
   if (req.user._id.toString() != mainTaskExist.userId.toString())
     return next(new Error("not allowed!"));
 
-  await MainTask.updateOne({ TaskName });
+  await MainTask.findByIdAndUpdate(mainTaskExist._id, { TaskName });
   return res
     .status(200)
     .json({ success: true, message: message.mainTask.updated });
@@ -48,19 +48,22 @@ export const percentageMainTasks = asyncHandler(async (req, res, next) => {
   });
   const percentageNumber =
     (doneSubtasks.length / mainTaskExist.subTasks.length) * 100;
-  const percentage = await MainTask.updateOne({
-    donePercentage: percentageNumber,
-  });
-  return res
-    .status(200)
-    .json({ success: true, message: mainTaskExist.donePercentage });
+  const percentage = await MainTask.updateOne(
+    { _id: mainTaskExist._id },
+    { donePercentage: percentageNumber }
+  );
+  return res.status(200).json({ success: true, message: percentageNumber });
 });
 // start date main task ==============================================
 export const startDate = asyncHandler(async (req, res, next) => {
   const mainTaskExist = await MainTask.findById(req.params.id);
   if (!mainTaskExist)
     return next(new Error(message.mainTask.notFound, { cause: 404 }));
-  const sDate = await MainTask.updateOne({ startDate: req.body });
+  const sDate = await MainTask.findByIdAndUpdate(
+    { _id: req.params.id },
+    { startDate: req.body.startDate },
+    { new: true }
+  );
   return res.status(200).json({ success: true, message: sDate });
 });
 // end date main task ==============================================
@@ -85,7 +88,8 @@ export const deleteMainTask = asyncHandler(async (req, res, next) => {
     return next(new Error(message.mainTask.notFound, { cause: 404 }));
   if (req.user._id.toString() != mainTaskExist.userId.toString())
     return next(new Error("not allowed!"));
-  await MainTask.deleteOne({ _id: req.params.id });
+  await SubTask.deleteMany({ mainTaskId: mainTaskExist._id });
+  await MainTask.deleteOne({ _id: mainTaskExist._id });
   return res
     .status(200)
     .json({ success: true, message: message.mainTask.deleted });

@@ -1,14 +1,13 @@
 import { model, Schema } from "mongoose";
 import { Gender } from "../../enums.js";
 
-
 const userSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
-      minLength:3,
-      maxLength:20,
+      minLength: 3,
+      maxLength: 20,
       unique: [true, "user name already exist"],
     },
     email: {
@@ -21,7 +20,7 @@ const userSchema = new Schema(
     Deleted: { type: Boolean, default: false },
     gender: { type: String, enum: Object.values(Gender) },
     isConfirmed: { type: Boolean, default: false },
-    datatedAt:Date
+    deletedAt: { type: Date, default: null },
   },
   {
     timestamps: true,
