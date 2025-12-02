@@ -1,4 +1,5 @@
 Task Manager API
+[https://documenter.getpostman.com/view/36269669/2sB3dMwAhs](https://documenter.getpostman.com/view/36269669/2sB3dMwAhs)
 
 Task Manager API is a RESTful backend application that allows each user to manage their own tasks.
 Every user has a private account, and all actions require authentication.
@@ -62,3 +63,10 @@ MongoDB + Mongoose
 JWT (jsonwebtoken)
 bcrypt
 Joi (for validation)
+
+Email Verification (Nodemailer)
+Used Nodemailer to send verification emails to users during registration.
+When a new user signs up:
+A verification email is sent to the provided email address.
+The user must confirm the email to activate the account.
+This adds an additional security layer and prevents fake registrations.
