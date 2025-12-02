@@ -2,7 +2,7 @@ import { model, Schema, Types } from "mongoose";
 
 const maintaskSchema = new Schema(
   {
-    TaskName: { type: String, required: true, unique: true },
+    TaskName: { type: String, required: true },
     userId: { type: Types.ObjectId, required: true, ref: "User" },
     startDate: { type: Date, default: Date.now },
     endDate: Date,

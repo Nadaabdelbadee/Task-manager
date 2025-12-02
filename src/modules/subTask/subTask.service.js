@@ -28,7 +28,7 @@ export const getSubTasks = asyncHandler(async (req, res, next) => {
 });
 // update sub task ==============================================
 export const updateSubTasks = asyncHandler(async (req, res, next) => {
-  const { subName, mainTaskId  } = req.body; // mainTaskId لازم موجود
+  const { subName, mainTaskId } = req.body; // mainTaskId لازم موجود
   const subTaskExist = await SubTask.findById(req.params.id);
   if (!subTaskExist)
     return next(new Error(message.subTask.notFound, { cause: 404 }));
@@ -36,12 +36,16 @@ export const updateSubTasks = asyncHandler(async (req, res, next) => {
   // تحقق من تكرار الاسم ضمن نفس MainTask
   const duplicate = await SubTask.findOne({
     subName,
-    mainTaskId, 
+    mainTaskId,
     _id: { $ne: subTaskExist._id },
   });
 
   if (duplicate)
-    return next(new Error("SubTask name already exists for this Main Task", { cause: 400 }));
+    return next(
+      new Error("SubTask name already exists for this Main Task", {
+        cause: 400,
+      })
+    );
 
   subTaskExist.subName = subName;
   await subTaskExist.save();
@@ -56,7 +60,7 @@ export const updateSubTasks = asyncHandler(async (req, res, next) => {
 export const doneSubTasks = asyncHandler(async (req, res, next) => {
   const subTaskExist = await SubTask.findById(req.params.id);
   if (!subTaskExist) return next(new Error(message.subTask.notFound));
-  await SubTask.updateOne({ done: true });
+  await SubTask.findByIdAndUpdate(subTaskExist._id, { done: true });
   return res.status(200).json({ success: true, message: "subTask completed" });
 });
 // start date sub task ==============================================
@@ -99,6 +103,9 @@ export const deleteSubTasks = asyncHandler(async (req, res, next) => {
   const subTaskExist = await SubTask.findById(req.params.id);
   if (!subTaskExist) return next(new Error(message.subTask.notFound));
   await SubTask.deleteOne({ _id: subTaskExist._id });
+  await MainTask.findByIdAndUpdate(subTaskExist.mainTaskId, {
+    $pull: { subTasks: subTaskExist._id },
+  });
   return res
     .status(200)
     .json({ success: true, message: message.subTask.deleted });
